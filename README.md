@@ -11,11 +11,19 @@
 
 ![obraz](https://github.com/user-attachments/assets/42169d40-3030-41db-8f88-61a5b5da2813)
 
-## Legenda
-- ✅ - Pełne wsparcie / Idealne zastosowanie
-- ⚡ - Częściowe wsparcie / Możliwe zastosowanie
-- ❌ - Brak wsparcia / Niezalecane
-- 🔷 - W rozwoju / Planowane
+
+
+
+
+
+
+
+
+
+
+
+# Szczegółowe porównanie frameworków pipeline'owych
+
 
 | Cecha / Zastosowanie | Pipexy | Apache NiFi | Apache Airflow | Kafka Streams | Temporal | Argo | Luigi |
 |---------------------|---------|-------------|----------------|---------------|----------|------|-------|
@@ -55,6 +63,22 @@
 | Monitoring API | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ⚡ |
 | Alerting | ✅ | ✅ | ✅ | ⚡ | ✅ | ✅ | ⚡ |
 | Logging | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+
+
+
+
+## Legenda
+- ✅ - Pełne wsparcie / Idealne zastosowanie
+- ⚡ - Częściowe wsparcie / Możliwe zastosowanie
+- ❌ - Brak wsparcia / Niezalecane
+- 🔷 - W rozwoju / Planowane
+
+
+
+
+
+
+
 
 ## Nisza dla każdego frameworka
 
