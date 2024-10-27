@@ -318,8 +318,334 @@ class OrderWorkflow implements OrderWorkflowInterface {
 - Dobra skalowalność
 - Overhead na niezawodność
 
+
+
+
+
+
+# Analiza konkurencji Pipexy w obszarach Video Processing i Machine Learning
+
+## Video Processing
+
+### Główny konkurent: Gstreamer z Nvidia DeepStream
+| Cecha | Pipexy | Gstreamer + DeepStream |
+|-------|---------|----------------------|
+| Latencja | ✅ <5ms | ⚡ 10-15ms |
+| GPU Acceleration | ✅ Natywne | ✅ Natywne |
+| Modularność | ✅ Mikrousługi | ⚡ Plugins |
+| Skalowalność | ✅ Horyzontalna | ⚡ Pojedynczy node |
+| Konfiguracja | ✅ YAML | ❌ Złożona |
+| Edge Deployment | ✅ Lekki | ⚡ Wymaga CUDA |
+
+### Przykład implementacji Pipexy:
+```yaml
+pipelines:
+  - name: video_analytics
+    startup:
+      - grpc://video-decoder:50051/start?codec=h264&gpu=0
+      - grpc://object-detector:50052/start?model=yolov5&device=gpu
+    tasks:
+      - input: rtsp://camera1.local:554/stream
+        process: 
+          - grpc://video-decoder:50051/decode
+          - grpc://object-detector:50052/detect
+        callback: grpc://analytics:50053/process_results
+```
+
+### Przykład implementacji GStreamer:
+```bash
+gst-launch-1.0 \
+  rtspsrc location=rtsp://camera1.local:554/stream ! \
+  nvv4l2decoder device=/dev/nvidia0 ! \
+  nvinfer config-file-path=yolov5.txt ! \
+  nvvideoconvert ! \
+  nvdsosd ! \
+  nveglglessink
+```
+
+## Machine Learning
+
+### Główny konkurent: KubeFlow
+| Cecha | Pipexy | KubeFlow |
+|-------|---------|----------|
+| Real-time inference | ✅ Natywne | ⚡ Przez KServe |
+| Trening modeli | ⚡ Przez moduły | ✅ Natywne |
+| Model deployment | ✅ Automatyczny | ✅ Automatyczny |
+| Edge AI | ✅ Lekki deployment | ❌ Wymaga K8s |
+| Pipeline definition | ✅ Prosty YAML | ❌ Złożony YAML |
+| Resource management | ⚡ Manual | ✅ Automatyczny |
+
+### Przykład implementacji Pipexy dla ML:
+```yaml
+pipelines:
+  - name: ml_inference
+    startup:
+      - grpc://model-loader:50051/start?model=resnet50&device=gpu
+      - grpc://feature-extractor:50052/start?type=image
+    tasks:
+      - input: grpc://data-source:50053/get_batch
+        process:
+          - grpc://feature-extractor:50052/extract
+          - grpc://model-loader:50051/predict
+        callback: grpc://results:50054/store
+```
+
+### Przykład implementacji KubeFlow:
+```yaml
+apiVersion: kubeflow.org/v1beta1
+kind: Pipeline
+metadata:
+  name: ml-inference
+spec:
+  steps:
+    - name: load-data
+      container:
+        image: data-loader:latest
+    - name: predict
+      container:
+        image: model-predictor:latest
+      dependencies: ['load-data']
+```
+
+## Kluczowe różnice
+
+### Video Processing
+1. **Pipexy vs GStreamer**
+   - Pipexy:
+     - Łatwiejsza dystrybutywność
+     - Prostsza konfiguracja
+     - Lepsza skalowalność horyzontalna
+     - Łatwiejsza integracja z mikrousługami
+   
+   - GStreamer:
+     - Większa dojrzałość
+     - Więcej gotowych pluginów
+     - Lepszy ekosystem NVIDIA
+     - Niższy overhead na pojedynczym node
+
+### Machine Learning
+1. **Pipexy vs KubeFlow**
+   - Pipexy:
+     - Niższa latencja
+     - Prostszy deployment
+     - Lepsze wsparcie dla edge
+     - Łatwiejsza integracja z istniejącymi systemami
+   
+   - KubeFlow:
+     - Lepsze zarządzanie zasobami
+     - Większe wsparcie dla treningu
+     - Bogaty ekosystem ML
+     - Lepsza integracja z cloud providers
+
+## Rekomendacje użycia
+
+### Video Processing
+- **Użyj Pipexy gdy:**
+  - Potrzebujesz skalowalności horyzontalnej
+  - Masz rozproszone przetwarzanie
+  - Ważna jest niska latencja
+  - Pracujesz na edge devices
+
+- **Użyj GStreamer gdy:**
+  - Pracujesz na pojedynczym, mocnym serwerze
+  - Potrzebujesz maksymalnej wydajności GPU
+  - Masz silną integrację z NVIDIA
+  - Nie potrzebujesz rozproszonego przetwarzania
+
+### Machine Learning
+- **Użyj Pipexy gdy:**
+  - Główny fokus to inference
+  - Pracujesz na edge
+  - Potrzebujesz niskiej latencji
+  - Masz własne modele
+
+- **Użyj KubeFlow gdy:**
+  - Potrzebujesz pełnego cyklu ML
+  - Pracujesz w cloud
+  - Trenujesz duże modele
+  - Potrzebujesz automatycznego zarządzania zasobami
+ 
+  - 
+
+
+
+
+
+# Szczegółowe porównanie Pipexy vs NVIDIA DeepStream
+
+## Architektura i podejście
+
+| Aspekt | Pipexy | DeepStream |
+|--------|--------|------------|
+| Architektura | Rozproszona, mikrousługowa | Monolityczna, plugin-based |
+| Protokół komunikacji | gRPC | NVIDIA IPC |
+| Skalowalność | Horyzontalna (multi-node) | Wertykalna (single-node) |
+| Deployment | Konteneryzacja, edge-ready | NVIDIA platform dependent |
+| Hardware Support | GPU/CPU agnostic | NVIDIA GPU focused |
+
+## Wydajność
+
+| Metryka | Pipexy | DeepStream |
+|---------|--------|------------|
+| Latencja (single stream) | ~5-10ms | ~3-7ms |
+| Throughput (multi stream) | ✅ Liniowa skalowalność | ⚡ Ograniczona do GPU |
+| GPU Utilization | ⚡ 70-85% | ✅ 90-95% |
+| CPU Overhead | ⚡ Średni | ✅ Niski |
+| Memory Usage | ✅ Dynamiczne | ⚡ Predefiniowane |
+
+## Przypadki użycia
+
+| Use Case | Pipexy | DeepStream |
+|----------|--------|------------|
+| Edge AI | ✅ Natywne wsparcie | ⚡ Przez DeepStream-IOT |
+| Cloud Processing | ✅ Natywne wsparcie | ❌ Ograniczone |
+| Multi-camera | ✅ Rozproszone | ⚡ Single node |
+| Real-time Analytics | ✅ Elastyczne | ✅ Zoptymalizowane |
+| Model Inference | ✅ Różne frameworki | ⚡ TensorRT focused |
+
+## Przykłady implementacji
+
+### Pipexy - Multi-camera detection
+```yaml
+pipelines:
+  - name: multi_camera_analytics
+    startup:
+      - grpc://video-decoder:50051/start?codec=h264&gpu=0
+      - grpc://object-detector:50052/start?model=yolov5&device=gpu
+      - grpc://tracker:50053/start?algorithm=sort
+    tasks:
+      - input: rtsp://camera1.local:554/stream
+        process: 
+          - grpc://video-decoder:50051/decode
+          - grpc://object-detector:50052/detect
+          - grpc://tracker:50053/track
+        callback: grpc://analytics:50054/process
+
+      - input: rtsp://camera2.local:554/stream
+        process:
+          - grpc://video-decoder:50051/decode
+          - grpc://object-detector:50052/detect
+          - grpc://tracker:50053/track
+        callback: grpc://analytics:50054/process
+```
+
+### DeepStream - Multi-camera detection
+```c
+// deepstream_app_config.txt
+[application]
+enable-perf-measurement=1
+perf-measurement-interval-sec=5
+gpu-id=0
+
+[source0]
+enable=1
+type=rtsp
+uri=rtsp://camera1.local:554/stream
+gpu-id=0
+cudadec-memtype=0
+
+[source1]
+enable=1
+type=rtsp
+uri=rtsp://camera2.local:554/stream
+gpu-id=0
+cudadec-memtype=0
+
+[primary-gie]
+enable=1
+gpu-id=0
+model-engine-file=model_b1_gpu0_fp16.engine
+batch-size=1
+```
+
+## Porównanie funkcjonalności
+
+### 1. Przetwarzanie wideo
+
+| Funkcja | Pipexy | DeepStream |
+|---------|---------|------------|
+| Hardware Decoding | ✅ Przez moduły | ✅ Natywne |
+| Multi-stream Processing | ✅ Rozproszone | ✅ Single-node |
+| Format Support | ✅ Przez moduły | ✅ Natywne |
+| Stream Synchronization | ✅ Przez moduły | ✅ Natywne |
+| Custom Processing | ✅ Łatwe | ⚡ Przez plugins |
+
+### 2. AI/ML Capabilities
+
+| Funkcja | Pipexy | DeepStream |
+|---------|---------|------------|
+| Model Formats | ✅ Wszystkie | ⚡ TensorRT |
+| Custom Models | ✅ Łatwe | ⚡ Wymaga konwersji |
+| Inference Speed | ⚡ Dobre | ✅ Optymalne |
+| Multi-model Pipeline | ✅ Elastyczne | ⚡ Ograniczone |
+| Model Updates | ✅ Runtime | ❌ Restart wymagany |
+
+### 3. Integracja i rozszerzalność
+
+| Funkcja | Pipexy | DeepStream |
+|---------|---------|------------|
+| Custom Plugins | ✅ Mikrousługi | ⚡ C/C++ plugins |
+| Cloud Integration | ✅ Native | ⚡ Ograniczona |
+| 3rd Party Systems | ✅ gRPC/REST | ⚡ Przez Plugins |
+| Edge Integration | ✅ Lightweight | ⚡ Jetson focused |
+| Monitoring | ✅ Built-in | ⚡ Basic |
+
+## Kiedy używać którego rozwiązania?
+
+### Wybierz Pipexy gdy:
+1. **Potrzebujesz rozproszonych systemów**
+   - Multi-node deployment
+   - Elastyczna skalowalność
+   - Cloud/edge hybrid setups
+
+2. **Wymagana jest elastyczność**
+   - Różne formaty modeli AI
+   - Customowe przetwarzanie
+   - Integracja z różnymi systemami
+
+3. **Pracujesz w heterogenicznym środowisku**
+   - Różne typy GPU
+   - Mix CPU/GPU processing
+   - Multi-vendor setup
+
+### Wybierz DeepStream gdy:
+1. **Masz dedykowane NVIDIA hardware**
+   - Tesla/Quadro GPUs
+   - Jetson devices
+   - Single-node setup
+
+2. **Priorytetem jest maksymalna wydajność**
+   - Maksymalne wykorzystanie GPU
+   - Minimalna latencja
+   - High-density processing
+
+3. **Potrzebujesz prostego pipeline'u**
+   - Standardowe przypadki użycia
+   - Minimalna customizacja
+   - Single-box rozwiązanie
+
+## Wnioski
+
+1. **Wydajność**
+   - DeepStream oferuje lepszą wydajność na pojedynczym node
+   - Pipexy zapewnia lepszą skalowalność i elastyczność
+
+2. **Deployment**
+   - DeepStream jest idealny dla standalone systemów
+   - Pipexy lepiej sprawdza się w rozproszonych systemach
+
+3. **Rozwój**
+   - DeepStream wymaga znajomości C/C++ i NVIDIA SDK
+   - Pipexy pozwala na rozwój w dowolnym języku
+
+4. **Koszt całkowity**
+   - DeepStream wymaga NVIDIA hardware
+   - Pipexy działa na różnym sprzęcie
+  
+
+
      
-## Przykłady pokazują różne scenariusze użycia:
+# Przykłady pokazują różne scenariusze użycia:
 
 1. Security Monitoring:
 - Monitoring kamer
