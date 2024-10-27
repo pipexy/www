@@ -19,53 +19,7 @@
 
 
 
-
-
-
 # Szczegółowe porównanie frameworków pipeline'owych
-
-
-| Cecha / Zastosowanie | Pipexy | Apache NiFi | Apache Airflow | Kafka Streams | Temporal | Argo | Luigi |
-|---------------------|---------|-------------|----------------|---------------|----------|------|-------|
-| **Przetwarzanie danych** |
-| Real-time processing | ✅ | ⚡ | ❌ | ✅ | ⚡ | ❌ | ❌ |
-| Batch processing | ⚡ | ✅ | ✅ | ⚡ | ✅ | ✅ | ✅ |
-| Stream processing | ✅ | ⚡ | ❌ | ✅ | ⚡ | ❌ | ❌ |
-| ETL | ⚡ | ✅ | ✅ | ⚡ | ⚡ | ✅ | ✅ |
-
-| **Zastosowania branżowe** |
-| IoT / Edge Computing | ✅ | ⚡ | ❌ | ⚡ | ❌ | ❌ | ❌ |
-| Machine Learning | ⚡ | ⚡ | ✅ | ⚡ | ⚡ | ✅ | ✅ |
-| Video Processing | ✅ | ❌ | ⚡ | ⚡ | ❌ | ⚡ | ❌ |
-| Financial Services | ✅ | ⚡ | ⚡ | ✅ | ✅ | ⚡ | ⚡ |
-| E-commerce | ✅ | ⚡ | ⚡ | ✅ | ✅ | ⚡ | ⚡ |
-
-| **Charakterystyka techniczna** |
-| Niska latencja (<10ms) | ✅ | ❌ | ❌ | ✅ | ⚡ | ❌ | ❌ |
-| Wysoka przepustowość | ✅ | ⚡ | ⚡ | ✅ | ⚡ | ⚡ | ⚡ |
-| Skalowalność horyzontalna | ✅ | ⚡ | ✅ | ✅ | ✅ | ✅ | ⚡ |
-| Fault tolerance | ⚡ | ✅ | ✅ | ✅ | ✅ | ✅ | ⚡ |
-
-| **Deployment i utrzymanie** |
-| Łatwość wdrożenia | ✅ | ❌ | ⚡ | ❌ | ❌ | ❌ | ✅ |
-| Konteneryzacja | ✅ | ⚡ | ✅ | ⚡ | ✅ | ✅ | ⚡ |
-| Cloud-native | ✅ | ⚡ | ✅ | ⚡ | ✅ | ✅ | ⚡ |
-| On-premise | ✅ | ✅ | ✅ | ✅ | ✅ | ⚡ | ✅ |
-
-| **Integracje i rozszerzalność** |
-| Własne moduły | ✅ | ⚡ | ✅ | ⚡ | ✅ | ✅ | ✅ |
-| REST API | ✅ | ✅ | ✅ | ⚡ | ✅ | ✅ | ⚡ |
-| gRPC | ✅ | ❌ | ⚡ | ⚡ | ✅ | ⚡ | ❌ |
-| Message Queues | ✅ | ✅ | ⚡ | ✅ | ⚡ | ⚡ | ⚡ |
-
-| **Monitorowanie i zarządzanie** |
-| GUI Dashboard | 🔷 | ✅ | ✅ | ⚡ | ✅ | ✅ | ⚡ |
-| Monitoring API | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ⚡ |
-| Alerting | ✅ | ✅ | ✅ | ⚡ | ✅ | ✅ | ⚡ |
-| Logging | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-
-
-
 
 ## Legenda
 - ✅ - Pełne wsparcie / Idealne zastosowanie
@@ -73,12 +27,60 @@
 - ❌ - Brak wsparcia / Niezalecane
 - 🔷 - W rozwoju / Planowane
 
+### Przetwarzanie danych
 
+| Cecha | Pipexy | Apache NiFi | Apache Airflow | Kafka Streams | Temporal | Argo | Luigi |
+|---------------------|---------|-------------|----------------|---------------|----------|------|-------|
+| Real-time processing | ✅ | ⚡ | ❌ | ✅ | ⚡ | ❌ | ❌ |
+| Batch processing | ⚡ | ✅ | ✅ | ⚡ | ✅ | ✅ | ✅ |
+| Stream processing | ✅ | ⚡ | ❌ | ✅ | ⚡ | ❌ | ❌ |
+| ETL | ⚡ | ✅ | ✅ | ⚡ | ⚡ | ✅ | ✅ |
 
+### Zastosowania branżowe
 
+| Zastosowanie | Pipexy | Apache NiFi | Apache Airflow | Kafka Streams | Temporal | Argo | Luigi |
+|---------------------|---------|-------------|----------------|---------------|----------|------|-------|
+| IoT / Edge Computing | ✅ | ⚡ | ❌ | ⚡ | ❌ | ❌ | ❌ |
+| Machine Learning | ⚡ | ⚡ | ✅ | ⚡ | ⚡ | ✅ | ✅ |
+| Video Processing | ✅ | ❌ | ⚡ | ⚡ | ❌ | ⚡ | ❌ |
+| Financial Services | ✅ | ⚡ | ⚡ | ✅ | ✅ | ⚡ | ⚡ |
+| E-commerce | ✅ | ⚡ | ⚡ | ✅ | ✅ | ⚡ | ⚡ |
 
+### Charakterystyka techniczna
 
+| Cecha | Pipexy | Apache NiFi | Apache Airflow | Kafka Streams | Temporal | Argo | Luigi |
+|---------------------|---------|-------------|----------------|---------------|----------|------|-------|
+| Niska latencja (<10ms) | ✅ | ❌ | ❌ | ✅ | ⚡ | ❌ | ❌ |
+| Wysoka przepustowość | ✅ | ⚡ | ⚡ | ✅ | ⚡ | ⚡ | ⚡ |
+| Skalowalność horyzontalna | ✅ | ⚡ | ✅ | ✅ | ✅ | ✅ | ⚡ |
+| Fault tolerance | ⚡ | ✅ | ✅ | ✅ | ✅ | ✅ | ⚡ |
 
+### Deployment i utrzymanie
+
+| Cecha | Pipexy | Apache NiFi | Apache Airflow | Kafka Streams | Temporal | Argo | Luigi |
+|---------------------|---------|-------------|----------------|---------------|----------|------|-------|
+| Łatwość wdrożenia | ✅ | ❌ | ⚡ | ❌ | ❌ | ❌ | ✅ |
+| Konteneryzacja | ✅ | ⚡ | ✅ | ⚡ | ✅ | ✅ | ⚡ |
+| Cloud-native | ✅ | ⚡ | ✅ | ⚡ | ✅ | ✅ | ⚡ |
+| On-premise | ✅ | ✅ | ✅ | ✅ | ✅ | ⚡ | ✅ |
+
+### Integracje i rozszerzalność
+
+| Cecha | Pipexy | Apache NiFi | Apache Airflow | Kafka Streams | Temporal | Argo | Luigi |
+|---------------------|---------|-------------|----------------|---------------|----------|------|-------|
+| Własne moduły | ✅ | ⚡ | ✅ | ⚡ | ✅ | ✅ | ✅ |
+| REST API | ✅ | ✅ | ✅ | ⚡ | ✅ | ✅ | ⚡ |
+| gRPC | ✅ | ❌ | ⚡ | ⚡ | ✅ | ⚡ | ❌ |
+| Message Queues | ✅ | ✅ | ⚡ | ✅ | ⚡ | ⚡ | ⚡ |
+
+### Monitorowanie i zarządzanie
+
+| Cecha | Pipexy | Apache NiFi | Apache Airflow | Kafka Streams | Temporal | Argo | Luigi |
+|---------------------|---------|-------------|----------------|---------------|----------|------|-------|
+| GUI Dashboard | 🔷 | ✅ | ✅ | ⚡ | ✅ | ✅ | ⚡ |
+| Monitoring API | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ⚡ |
+| Alerting | ✅ | ✅ | ✅ | ⚡ | ✅ | ✅ | ⚡ |
+| Logging | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 
 ## Nisza dla każdego frameworka
 
@@ -148,6 +150,13 @@
    - General-purpose: Pipexy, NiFi
    - Domain-specific: Kafka Streams (streaming), Airflow (scheduling)
    - Workflow-specific: Temporal, Argo
+
+
+
+
+
+
+
 
 
 # Szczegółowe porównanie przypadków użycia rozwiązań pipeline'owych
