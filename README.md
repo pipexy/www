@@ -7,7 +7,285 @@
 "Protocol" - directly references the gRPC/protocol foundation
 "Streams" - evokes both: Data streaming/flow, Pipeline processing capabilities
 
+# Szczegółowe porównanie frameworków pipeline'owych
 
+![obraz](https://github.com/user-attachments/assets/42169d40-3030-41db-8f88-61a5b5da2813)
+
+## Legenda
+- ✅ - Pełne wsparcie / Idealne zastosowanie
+- ⚡ - Częściowe wsparcie / Możliwe zastosowanie
+- ❌ - Brak wsparcia / Niezalecane
+- 🔷 - W rozwoju / Planowane
+
+| Cecha / Zastosowanie | Pipexy | Apache NiFi | Apache Airflow | Kafka Streams | Temporal | Argo | Luigi |
+|---------------------|---------|-------------|----------------|---------------|----------|------|-------|
+| **Przetwarzanie danych** |
+| Real-time processing | ✅ | ⚡ | ❌ | ✅ | ⚡ | ❌ | ❌ |
+| Batch processing | ⚡ | ✅ | ✅ | ⚡ | ✅ | ✅ | ✅ |
+| Stream processing | ✅ | ⚡ | ❌ | ✅ | ⚡ | ❌ | ❌ |
+| ETL | ⚡ | ✅ | ✅ | ⚡ | ⚡ | ✅ | ✅ |
+
+| **Zastosowania branżowe** |
+| IoT / Edge Computing | ✅ | ⚡ | ❌ | ⚡ | ❌ | ❌ | ❌ |
+| Machine Learning | ⚡ | ⚡ | ✅ | ⚡ | ⚡ | ✅ | ✅ |
+| Video Processing | ✅ | ❌ | ⚡ | ⚡ | ❌ | ⚡ | ❌ |
+| Financial Services | ✅ | ⚡ | ⚡ | ✅ | ✅ | ⚡ | ⚡ |
+| E-commerce | ✅ | ⚡ | ⚡ | ✅ | ✅ | ⚡ | ⚡ |
+
+| **Charakterystyka techniczna** |
+| Niska latencja (<10ms) | ✅ | ❌ | ❌ | ✅ | ⚡ | ❌ | ❌ |
+| Wysoka przepustowość | ✅ | ⚡ | ⚡ | ✅ | ⚡ | ⚡ | ⚡ |
+| Skalowalność horyzontalna | ✅ | ⚡ | ✅ | ✅ | ✅ | ✅ | ⚡ |
+| Fault tolerance | ⚡ | ✅ | ✅ | ✅ | ✅ | ✅ | ⚡ |
+
+| **Deployment i utrzymanie** |
+| Łatwość wdrożenia | ✅ | ❌ | ⚡ | ❌ | ❌ | ❌ | ✅ |
+| Konteneryzacja | ✅ | ⚡ | ✅ | ⚡ | ✅ | ✅ | ⚡ |
+| Cloud-native | ✅ | ⚡ | ✅ | ⚡ | ✅ | ✅ | ⚡ |
+| On-premise | ✅ | ✅ | ✅ | ✅ | ✅ | ⚡ | ✅ |
+
+| **Integracje i rozszerzalność** |
+| Własne moduły | ✅ | ⚡ | ✅ | ⚡ | ✅ | ✅ | ✅ |
+| REST API | ✅ | ✅ | ✅ | ⚡ | ✅ | ✅ | ⚡ |
+| gRPC | ✅ | ❌ | ⚡ | ⚡ | ✅ | ⚡ | ❌ |
+| Message Queues | ✅ | ✅ | ⚡ | ✅ | ⚡ | ⚡ | ⚡ |
+
+| **Monitorowanie i zarządzanie** |
+| GUI Dashboard | 🔷 | ✅ | ✅ | ⚡ | ✅ | ✅ | ⚡ |
+| Monitoring API | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ⚡ |
+| Alerting | ✅ | ✅ | ✅ | ⚡ | ✅ | ✅ | ⚡ |
+| Logging | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+
+## Nisza dla każdego frameworka
+
+### Pipexy
+**Idealne dla:**
+- Systemów real-time wymagających niskiej latencji
+- Edge computing i IoT
+- Przetwarzania strumieni wideo
+- Modularnych systemów rozproszonego przetwarzania
+- Mikrousług wymagających wysokiej wydajności
+
+### Apache NiFi
+**Idealne dla:**
+- Złożonych przepływów danych enterprise
+- Systemów wymagających GUI do konfiguracji
+- ETL z wieloma źródłami danych
+- Systemów wymagających szczegółowego audytu
+
+### Apache Airflow
+**Idealne dla:**
+- Orkiestracji zadań ML/AI
+- Zaplanowanych zadań ETL
+- Kompleksowych pipeline'ów analitycznych
+- Systemów z zależnościami między zadaniami
+
+### Kafka Streams
+**Idealne dla:**
+- Przetwarzania zdarzeń w czasie rzeczywistym
+- Systemów wymagających bardzo wysokiej przepustowości
+- Event-driven architectures
+- Analityki strumieniowej
+
+### Temporal
+**Idealne dla:**
+- Długotrwałych procesów biznesowych
+- Systemów wymagających niezawodności
+- Złożonych workflow z compensations
+- Mikrousług wymagających state management
+
+### Argo
+**Idealne dla:**
+- CI/CD pipeline'ów
+- Kubernetes-native applications
+- ML training pipeline'ów
+- Cloud-native applications
+
+### Luigi
+**Idealne dla:**
+- Prostych batch procesów
+- Pipeline'ów ML z Pythonem
+- ETL w małej/średniej skali
+- Systemów z prostymi zależnościami
+
+## Kluczowe różnice w zastosowaniu
+
+1. **Latencja vs Throughput**
+   - Najniższa latencja: Pipexy, Kafka Streams
+   - Najwyższy throughput: Kafka Streams, Pipexy
+   - Batch-oriented: Airflow, Luigi, NiFi
+
+2. **Złożoność vs Elastyczność**
+   - Najprostsze: Luigi, Pipexy
+   - Najbardziej elastyczne: Pipexy, Temporal
+   - Najbardziej złożone: NiFi, Temporal
+
+3. **Use-case Specificity**
+   - General-purpose: Pipexy, NiFi
+   - Domain-specific: Kafka Streams (streaming), Airflow (scheduling)
+   - Workflow-specific: Temporal, Argo
+
+
+# Szczegółowe porównanie przypadków użycia rozwiązań pipeline'owych
+
+## Pipexy
+
+### Najlepsze zastosowania:
+- Systemy monitoringu w czasie rzeczywistym
+- Przetwarzanie strumieni wideo
+- Systemy IoT z wieloma czujnikami
+- Mikrousługi wymagające niskiej latencji
+
+### Przykład implementacji:
+```yaml
+pipelines:
+  - name: real_time_monitoring
+    startup:
+      - grpc://sensor-reader:50051/start?type=temperature
+    tasks:
+      - input: mqtt://sensors.local:1883/temp-sensors
+        process: grpc://analyzer:50051/analyze_temp
+        callback: grpc://alerts:50052/temp_alert
+```
+
+### Kiedy używać:
+- Potrzeba niskiej latencji
+- Modułowa architektura
+- Częste zmiany w logice przetwarzania
+- Rozproszone systemy edge computing
+
+## Apache NiFi
+
+### Najlepsze zastosowania:
+- ETL na dużą skalę
+- Routing i transformacja danych
+- Integracja systemów enterprise
+
+### Przykład implementacji:
+```xml
+<processor>
+  <name>GetFile</name>
+  <config>
+    <directory>/input</directory>
+    <filter>*.csv</filter>
+  </config>
+  <relationship name="success" destination="ParseCSV"/>
+</processor>
+```
+
+### Kiedy używać:
+- Złożone przepływy danych
+- Potrzebny interfejs graficzny
+- Duża liczba źródeł danych
+- Wymagane audytowanie
+
+## Apache Airflow
+
+### Najlepsze zastosowania:
+- Orkiestracja zadań ML
+- Zaplanowane przetwarzanie danych
+- Kompleksowe pipeline'y ETL
+
+### Przykład implementacji:
+```python
+with DAG('data_pipeline', schedule_interval='@daily') as dag:
+    extract = PythonOperator(
+        task_id='extract',
+        python_callable=extract_data
+    )
+    transform = PythonOperator(
+        task_id='transform',
+        python_callable=transform_data
+    )
+    extract >> transform
+```
+
+### Kiedy używać:
+- Zaplanowane zadania
+- Złożone zależności między zadaniami
+- Potrzebny monitoring i retrying
+- Integracja z ekosystemem Python
+
+## Kafka Streams
+
+### Najlepsze zastosowania:
+- Przetwarzanie strumieni w czasie rzeczywistym
+- Analityka strumieniowa
+- Event-driven architektura
+
+### Przykład implementacji:
+```java
+StreamsBuilder builder = new StreamsBuilder();
+builder.stream("input-topic")
+       .filter((key, value) -> value > threshold)
+       .to("output-topic");
+```
+
+### Kiedy używać:
+- Wysoka przepustowość
+- Event sourcing
+- Potrzeba state stores
+- Przetwarzanie strumieniowe
+
+## Temporal
+
+### Najlepsze zastosowania:
+- Długotrwałe procesy biznesowe
+- Mikrousługi wymagające niezawodności
+- Złożone workflow z compensations
+
+### Przykład implementacji:
+```typescript
+@WorkflowImpl
+class OrderWorkflow implements OrderWorkflowInterface {
+  @WorkflowMethod
+  async processOrder(orderId: string): Promise<void> {
+    await this.validateOrder(orderId);
+    await this.processPayment(orderId);
+    await this.shipOrder(orderId);
+  }
+}
+```
+
+### Kiedy używać:
+- Krytyczne procesy biznesowe
+- Potrzeba wersjonowania workflow
+- Wymagana odporność na awarie
+- Długotrwałe transakcje
+
+## Porównanie wydajności
+
+### Pipexy
+- Najniższa latencja dzięki gRPC
+- Niskie zużycie zasobów
+- Dobra skalowalność horyzontalna
+- Optymalne dla edge computing
+
+### NiFi
+- Średnia latencja
+- Wysokie zużycie pamięci
+- Dobra przepustowość dla batch processing
+- Ograniczona skalowalność
+
+### Airflow
+- Wyższa latencja
+- Średnie zużycie zasobów
+- Dobra skalowalność dla zadań batch
+- Nie nadaje się do real-time
+
+### Kafka Streams
+- Bardzo niska latencja
+- Wysokie zużycie pamięci
+- Najlepsza przepustowość
+- Doskonała skalowalność
+
+### Temporal
+- Średnia latencja
+- Średnie zużycie zasobów
+- Dobra skalowalność
+- Overhead na niezawodność
+
+     
 ## Przykłady pokazują różne scenariusze użycia:
 
 1. Security Monitoring:
